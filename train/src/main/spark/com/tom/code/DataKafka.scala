@@ -186,9 +186,10 @@ object DataKafka {
     ))
     //将数据转换成parquet文件
     val frame: DataFrame = session.createDataFrame(rddRow,logSchema.schema)
-    frame.write.mode(SaveMode.Overwrite).partitionBy("MPacketHead_ATPType").parquet("E:/test/train/data/parquetData")
+//    frame.write.mode(SaveMode.Overwrite).partitionBy("MPacketHead_ATPType").parquet("E:/test/train/data/parquetData")
 
-//    frame.coalesce(1).write.mode(SaveMode.Overwrite).parquet("E:/test/train/data/parquetData1")
+//    frame.coalesce(1).write.mode(SaveMode.Overwrite).parquet("E:/test/train/data/parquetData")
+    frame.write.mode(SaveMode.Overwrite).parquet("E:/test/train/data/parquetData")
     //释放资源
     session.stop()
   }

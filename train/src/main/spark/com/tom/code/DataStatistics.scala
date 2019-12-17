@@ -37,7 +37,7 @@ object DataStatistics {
 
     val frame: DataFrame = session.read.load("E:\\test\\train\\data\\parquetData\\")
     //使用sparkCore实现
-//    frame.show()
+    //    frame.show()
 
     val resultSource: Dataset[(String, List[Int])] = frame.map(row => {
       val atpError: String = row.getAs[String]("MATPBaseInfo_AtpError")
@@ -58,20 +58,20 @@ object DataStatistics {
     })
     val resultRDD: RDD[(String, List[Int])] = resultSource.rdd.reduceByKey((x, y) => x.zip(y).map(t => t._1 + t._2))
 
-//    resultRDD.foreach(println)
+    //    resultRDD.foreach(println)
 
     //    方式一：使用dataframe
-//    val result: DataFrame = resultSource.rdd.reduceByKey((x, y) => x.zip(y).map(t => t._1 + t._2)).map(tp => {
-//      (tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9))
-//    }).toDF(
-//      "铁路局", "总数据量", "总报警次数", "车载主机", "无线传输单元", "应答器信息接收单元", "轨道电路信息读取器", "测速测距单元",
-//      "人机交互接口单元", "列车接口单元", "司法记录单元")
-//    result.write.mode(SaveMode.Overwrite).partitionBy("铁路局").json("E:\\test\\train\\data\\jsonOutputDataFrame\\")
-//    result.show()
+    //    val result: DataFrame = resultSource.rdd.reduceByKey((x, y) => x.zip(y).map(t => t._1 + t._2)).map(tp => {
+    //      (tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9))
+    //    }).toDF(
+    //      "铁路局", "总数据量", "总报警次数", "车载主机", "无线传输单元", "应答器信息接收单元", "轨道电路信息读取器", "测速测距单元",
+    //      "人机交互接口单元", "列车接口单元", "司法记录单元")
+    //    result.write.mode(SaveMode.Overwrite).partitionBy("铁路局").json("E:\\test\\train\\data\\jsonOutputDataFrame\\")
+    //    result.show()
 
     //方式二：使用Gson
     //向本地写
-//    val file: File = new File("E:\\test\\train\\data\\jsonOutPutGson\\")
+    //    val file: File = new File("E:\\test\\train\\data\\jsonOutPutGson\\")
     //判断文佳是否存在，如果存在删除原来已经存在的
     //        if(file.exists()){
     //          //删除文本
@@ -82,7 +82,7 @@ object DataStatistics {
     //向hdfs写
     val configuration = session.sparkContext.hadoopConfiguration
 
-    val fs: FileSystem = FileSystem.get(new URI("hdfs://hadoop201:9000"),configuration,"root")
+    val fs: FileSystem = FileSystem.get(new URI("hdfs://hadoop201:9000"), configuration, "root")
     val path: Path = new Path("/train/data1/ATPError")
 
     if (fs.exists(path)) {
@@ -102,31 +102,31 @@ object DataStatistics {
     result.saveAsTextFile("hdfs://hadoop201:9000/train/data1/ATPError/")
 
     //保存到数据库方式一：dataframe
-    
-//    val props: Properties = new Properties()
-//    props.setProperty("driver",ConfigHelper.driver)
-//    props.setProperty("user",ConfigHelper.user)
-//    props.setProperty("password",ConfigHelper.password)
-//
-//    resultRDD.map(tp=>(tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9)))
-//        .toDF("铁路局", "总数据量", "总报警次数", "车载主机", "无线传输单元", "应答器信息接收单元", "轨道电路信息读取器", "测速测距单元",
-//                "人机交互接口单元", "列车接口单元", "司法记录单元")
-//        .write.mode(SaveMode.Overwrite).jdbc(ConfigHelper.url,"ATPData1213",props)
-//        .show()
 
-//      DBs.setup()
-//    resultRDD.foreachPartition(partition=>{
-//      DB.localTx{implicit session =>
-//        partition.foreach(tp=>{
-//          SQL("insert into ATPData1213 values(?,?,?,?,?,?,?,?,?,?,?)")
-//            .bind(tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9))
-//            .update()
-//            .apply()
-//        })
-//      }
-//
-//      println("=========================================================================")
-//    })
+    //    val props: Properties = new Properties()
+    //    props.setProperty("driver",ConfigHelper.driver)
+    //    props.setProperty("user",ConfigHelper.user)
+    //    props.setProperty("password",ConfigHelper.password)
+    //
+    //    resultRDD.map(tp=>(tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9)))
+    //        .toDF("铁路局", "总数据量", "总报警次数", "车载主机", "无线传输单元", "应答器信息接收单元", "轨道电路信息读取器", "测速测距单元",
+    //                "人机交互接口单元", "列车接口单元", "司法记录单元")
+    //        .write.mode(SaveMode.Overwrite).jdbc(ConfigHelper.url,"ATPData1213",props)
+    //        .show()
+
+    //      DBs.setup()
+    //    resultRDD.foreachPartition(partition=>{
+    //      DB.localTx{implicit session =>
+    //        partition.foreach(tp=>{
+    //          SQL("insert into ATPData1213 values(?,?,?,?,?,?,?,?,?,?,?)")
+    //            .bind(tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9))
+    //            .update()
+    //            .apply()
+    //        })
+    //      }
+    //
+    //      println("=========================================================================")
+    //    })
 
     session.stop()
 

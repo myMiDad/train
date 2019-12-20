@@ -108,7 +108,7 @@ object DataKafka {
 
     //需求二：300S+300SATO
     val filter300S: RDD[Array[String]] = sourceRDD.filter(arr => arr(0).startsWith("300S"))
-      .filter(arr => !arr(17).contains("休眠") && !(arr(9).contains("CTCS-3") && arr(17).contains("SB")) || !arr(17).contains("切换到备系"))
+      .filter(arr => !arr(17).contains("休眠") && !arr(9).contains("CTCS-3") && (arr(17).contains("SB") || !arr(17).contains("切换到备系")))
 
     //需求三：200H
     val filter200H: RDD[Array[String]] = sourceRDD.filter(arr=> arr(0).equals("200H") && !arr(17).contains("休眠") && !arr(17).contains("VC2"))
@@ -188,8 +188,9 @@ object DataKafka {
     val frame: DataFrame = session.createDataFrame(rddRow,logSchema.schema)
 //    frame.write.mode(SaveMode.Overwrite).partitionBy("MPacketHead_ATPType").parquet("E:/test/train/data/parquetData")
 
-//    frame.coalesce(1).write.mode(SaveMode.Overwrite).parquet("E:/test/train/data/parquetData")
-    frame.write.mode(SaveMode.Overwrite).parquet("E:/test/train/data/parquetData")
+    frame.show(900000000)
+    frame.coalesce(1).write.mode(SaveMode.Overwrite).parquet("E:/test/train/data/parquetData1")
+//    frame.write.mode(SaveMode.Overwrite).parquet("E:/test/train/data/parquetData")
     //释放资源
     session.stop()
   }

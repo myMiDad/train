@@ -115,6 +115,10 @@ object DataDSStream {
           save2Redis(result.map(tp => (tp._2, tp._4)))
           //将铁路局数据存储到redis中
           save2Redis(result.map(tp => (tp._3, tp._4)))
+          //将铁路局数据存储到redis中,铁路局加小时
+          save2Redis(result.map(tp => (tp._3+"_"+tp._1, tp._4)))
+          //将铁路局数据存储到redis中,铁路局加分钟
+          save2Redis(result.map(tp => (tp._3+"_"+tp._2, tp._4)))
 
           println(offsetRanges.toBuffer+"============2")
           //将偏移量存到mysql中

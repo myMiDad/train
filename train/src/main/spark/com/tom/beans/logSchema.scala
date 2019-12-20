@@ -17,8 +17,8 @@ object logSchema {
     StructField("MPacketHead_AttachRWBureau",StringType),
     StructField("MPacketHead_ViaRWBureau",StringType),
     StructField("MPacketHead_CrossDayTrainNum",StringType),
-    StructField("MPacketHead_DriverIDMATPBaseInfo_DataTime",StringType),
-    StructField("DataTime",StringType),
+    StructField("MPacketHead_DriverID",StringType),
+    StructField("MATPBaseInfo_DataTime",StringType),
     StructField("MATPBaseInfo_Speed",StringType),
     StructField("MATPBaseInfo_Level",StringType),
     StructField("MATPBaseInfo_Mileage",StringType),
@@ -62,9 +62,9 @@ object logSchema {
     StructField("DriverInfo_Validit",StringType),
     StructField("RunDirection_RunDirection",StringType),
     StructField("UUID",StringType),
-    StructField("Environment_Temperature",StringType),
-    StructField("Environment_Road",StringType),
-    StructField("Environment_Weather",StringType),
-    StructField("Environment_Humidity",StringType)
+    StructField("Temperature",StringType),
+    StructField("Road",StringType),
+    StructField("Weather",StringType),
+    StructField("Humidity",StringType)
   ))
 }

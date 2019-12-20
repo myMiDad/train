@@ -80,26 +80,26 @@ object DataStatistics {
     //          FileUtils.deleteDirectory(file)
     //        }
     //向hdfs写
-    val configuration = session.sparkContext.hadoopConfiguration
+    //    val configuration = session.sparkContext.hadoopConfiguration
 
-    val fs: FileSystem = FileSystem.get(new URI("hdfs://hadoop201:9000"), configuration, "root")
-    val path: Path = new Path("/train/data1/ATPError")
+    //    val fs: FileSystem = FileSystem.get(new URI("hdfs://hadoop201:9000"), configuration, "root")
+    //    val path: Path = new Path("/train/data1/ATPError")
 
-    if (fs.exists(path)) {
-      println("=====================================")
-      fs.delete(path, true)
-    }
-    fs.close()
+    //    if (fs.exists(path)) {
+    //      println("=====================================")
+    //      fs.delete(path, true)
+    //    }
+    //    fs.close()
 
-    val result: RDD[String] = resultRDD.map(tp => {
-      val gson = new Gson()
-      val jsonStr: String = gson.toJson(AttachRWBureau(tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9)))
-      jsonStr
-    })
+    //    val result: RDD[String] = resultRDD.map(tp => {
+    //      val gson = new Gson()
+    //      val jsonStr: String = gson.toJson(AttachRWBureau(tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9)))
+    //      jsonStr
+    //    })
     //向本地保存
     //        result.saveAsTextFile("E:\\test\\train\\data\\jsonOutPutGson\\")
     //保存到hdfs
-    result.saveAsTextFile("hdfs://hadoop201:9000/train/data1/ATPError/")
+    //    result.saveAsTextFile("hdfs://hadoop201:9000/train/data1/ATPError/")
 
     //保存到数据库方式一：dataframe
 
@@ -114,19 +114,19 @@ object DataStatistics {
     //        .write.mode(SaveMode.Overwrite).jdbc(ConfigHelper.url,"ATPData1213",props)
     //        .show()
 
-    //      DBs.setup()
-    //    resultRDD.foreachPartition(partition=>{
-    //      DB.localTx{implicit session =>
-    //        partition.foreach(tp=>{
-    //          SQL("insert into ATPData1213 values(?,?,?,?,?,?,?,?,?,?,?)")
-    //            .bind(tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9))
-    //            .update()
-    //            .apply()
-    //        })
-    //      }
-    //
-    //      println("=========================================================================")
-    //    })
+    DBs.setup()
+    resultRDD.foreachPartition(partition => {
+      DB.localTx { implicit session =>
+        partition.foreach(tp => {
+          SQL("insert into ATPData12132 values(?,?,?,?,?,?,?,?,?,?,?)")
+            .bind(tp._1, tp._2(0), tp._2(1), tp._2(2), tp._2(3), tp._2(4), tp._2(5), tp._2(6), tp._2(7), tp._2(8), tp._2(9))
+            .update()
+            .apply()
+        })
+      }
+
+      println("=========================================================================")
+    })
 
     session.stop()
 

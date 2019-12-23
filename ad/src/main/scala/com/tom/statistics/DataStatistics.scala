@@ -22,22 +22,26 @@ object DataStatistics {
 
     import session.implicits._
 
-    val frame = session.read.parquet("E:\\test\\ad\\parquent")
+    val frame = session.read.parquet("D:\\z_test\\ad\\parquet")
 
     frame.createTempView("data")
+//    session.sql(
+//      """
+//        |select a.provincename,a.cityname,b.ct
+//        |from
+//        | (select distinct provincename,cityname from data) a,
+//        | (select count(*) ct,cityname
+//        |   from
+//        |     (select provincename ,cityname from data) d
+//        |   group by cityname
+//        |   ) b
+//        |where a.cityname = b.cityname
+//        |order by a.provincename
+//        |""".stripMargin).show(10000)
     session.sql(
       """
-        |select a.provincename,a.cityname,b.ct
-        |from
-        | (select distinct provincename,cityname from data) a,
-        | (select count(*) ct,cityname
-        |   from
-        |     (select provincename ,cityname from data) d
-        |   group by cityname
-        |   ) b
-        |where a.cityname = b.cityname
-        |order by a.provincename
-        |""".stripMargin).show(10000)
+        |select lat,long from data
+        |""".stripMargin).show(100000)
 
     println("================================================================")
 //    session.sql(

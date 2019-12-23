@@ -1,7 +1,5 @@
 package com.tom.usertable;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -23,7 +21,6 @@ public class AddUser2TableReduce extends Reducer<Text,Text,Text, NullWritable> {
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
         k = new Text();
-        super.setup(context);
     }
 
     @Override
@@ -39,7 +36,8 @@ public class AddUser2TableReduce extends Reducer<Text,Text,Text, NullWritable> {
         Map.Entry<Long, String> entry = treeMap.firstEntry();
         System.out.println(entry.getKey()+"------"+entry.getValue());
 
-        k.set(entry.getValue());
+        String[] split = entry.getValue().split(",");
+        k.set(split[0]+","+split[1]+","+split[2]+","+split[4]+","+split[5]+","+split[6]);
 
         context.write(k,NullWritable.get());
     }

@@ -49,6 +49,7 @@ public class CountDriver {
 
         //设置输入
         FileInputFormat.setInputPaths(job,new Path(args[0]));
+        FileInputFormat.setInputDirRecursive(job,true);
 //        FileOutputFormat.setOutputPath(job,new Path(args[1]));
         //输出到数据库
         DBOutputFormat.setOutput(job,"count_table","city","channel","version","sum");

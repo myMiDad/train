@@ -33,6 +33,8 @@ public class CountReduce extends Reducer<Text, LongWritable,CountBean, NullWrita
         String channel = split[1];
         String version = split[2];
 
+        System.out.println(city+"---"+channel+"---"+version);
+
         //写出
         CountBean countBean = new CountBean();
         countBean.setCity(city);

@@ -26,7 +26,7 @@ public class CountMapper extends Mapper<LongWritable, Text,Text,LongWritable> {
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         //获取字符串
         String line = value.toString();
-        String[] splits = line.split("\\|");
+        String[] splits = line.split(",");
         if (splits.length<7){
             return;
         }
@@ -66,10 +66,5 @@ public class CountMapper extends Mapper<LongWritable, Text,Text,LongWritable> {
         //分地区、分渠道、分版本
         k.set(city+","+channel+","+version);
         context.write(k,v);
-    }
-
-    @Override
-    protected void cleanup(Context context) throws IOException, InterruptedException {
-        super.cleanup(context);
     }
 }

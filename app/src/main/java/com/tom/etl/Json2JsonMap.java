@@ -28,7 +28,6 @@ public class Json2JsonMap extends Mapper<LongWritable, Text, Text, NullWritable>
     protected void setup(Context context) throws IOException, InterruptedException {
         mo = new MultipleOutputs<Text, NullWritable>(context);
         k = new Text();
-        super.setup(context);
     }
 
     //主业务逻辑

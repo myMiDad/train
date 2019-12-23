@@ -1,4 +1,4 @@
-package com.tom.usertable;
+package com.tom.active;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -7,46 +7,43 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
- * ClassName: AddUser2Table
+ * ClassName: ActiveMapper
  * Description:
  *
  * @author Mi_dad
- * @date 2019/12/22 9:32
+ * @date 2019/12/23 8:51
  */
-public class AddUser2TableMap extends Mapper<LongWritable, Text,Text,Text> {
-    private String day ="";
-    private Text keyOut=null;
-    private Text valueOut=null;
+public class ActiveMapper1 extends Mapper<LongWritable, Text, Text, Text> {
+    Text keyOut = null;
+    Text valueOut = null;
+    String day = "";
     @Override
     protected void setup(Context context) throws IOException, InterruptedException {
-        day = context.getConfiguration().get("date");
         keyOut = new Text();
         valueOut = new Text();
+        day = context.getConfiguration().get("date");
     }
 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        //获得原始数据
+        //原始数据
         String line = value.toString();
-        //将原始数据转换成JSON
+        //将原始数据转换为json
         JSONObject jsonObject = JSON.parseObject(line);
         JSONObject header = jsonObject.getJSONObject("header");
-
-        String user_id = header.getString("user_id");
+        //获取app_token、user_id、version、channel、city
         String app_token = header.getString("app_token");
-        String commit_time = header.getString("commit_time");
-        String app_ver_name = header.getString("app_ver_name");
-        String release_channel = header.getString("release_channel");
+        String user_id = header.getString("user_id");
+        String version = header.getString("app_ver_name");
+        String channel = header.getString("release_channel");
         String city = header.getString("city");
+        String commit_time = header.getString("commit_time");
 
-        String k = app_token+"|"+user_id;
-        keyOut.set(k);
-        valueOut.set(day+","+app_token+","+user_id+","+commit_time+","+app_ver_name+","+release_channel+","+city);
+        //写出到reduce
+        keyOut.set(app_token+"|"+user_id);
+        valueOut.set(day+","+app_token+","+user_id+","+version+","+channel+","+city+","+commit_time);
         context.write(keyOut,valueOut);
     }
 

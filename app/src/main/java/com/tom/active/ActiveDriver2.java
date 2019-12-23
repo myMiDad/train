@@ -1,7 +1,8 @@
-package com.tom.usertable;
+package com.tom.active;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -10,36 +11,33 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import java.io.IOException;
 
 /**
- * ClassName: AddUser2TableDriver
+ * ClassName: ActiveDriver2
  * Description:
  *
  * @author Mi_dad
- * @date 2019/12/22 9:40
+ * @date 2019/12/23 10:18
  */
-public class AddUser2TableDriver {
+public class ActiveDriver2 {
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration conf = new Configuration();
-        conf.set("date",args[0]);
-        Job job = Job.getInstance(conf);
 
-        job.setJarByClass(AddUser2TableDriver.class);
-        job.setMapperClass(AddUser2TableMap.class);
-        job.setReducerClass(AddUser2TableReduce.class);
+        Job job = Job.getInstance(conf);
+        job.setJarByClass(ActiveDriver2.class);
+
+        job.setMapperClass(ActiveMapper2.class);
+        job.setReducerClass(ActiveReduce2.class);
 
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Text.class);
 
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(Text.class);
+        job.setOutputValueClass(NullWritable.class);
 
-        FileInputFormat.setInputPaths(job,new Path(args[1]));
+        FileInputFormat.setInputPaths(job,new Path(args[0]));
         FileInputFormat.setInputDirRecursive(job,true);
-        FileOutputFormat.setOutputPath(job,new Path(args[2]));
+        FileOutputFormat.setOutputPath(job,new Path(args[1]));
 
         boolean b = job.waitForCompletion(true);
-
-        System.out.println(b);
-        System.exit(b ? 0:1);
-
+        System.exit(b?0:1);
     }
 }
